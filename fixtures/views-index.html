@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>CRAN Task Views</title>
+  <link rel="canonical" href="https://CRAN.R-project.org/web/views/">
+  <link rel="stylesheet" type="text/css" href="../CRAN_web.css">
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="citation_title" content="CRAN Task Views">
+  <meta name="citation_author" content="CRAN">
+  <meta name="citation_publication_date" content="2026-05-11">
+  <meta name="citation_public_url" content="https://CRAN.R-project.org/web/views/">
+  <meta name="DC.identifier" content="https://CRAN.R-project.org/web/views/">
+  <meta name="DC.publisher" content="Comprehensive R Archive Network (CRAN)">
+  <meta name="og:title" content="CRAN Task Views">
+  <meta name="og:description" content="CRAN task views aim to provide guidance which packages on CRAN are relevant for tasks related to a certain topic. They give a brief overview of the included packages which can also be automatically installed using the ctv package.">
+  <meta name="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="og:image" content="https://CRAN.R-project.org/CRANlogo.png">
+  <meta name="og:url" content="https://CRAN.R-project.org/web/views/">
+  <meta name="twitter:site" content="@_R_Foundation">
+</head>
+
+<body>
+<h1>CRAN Task Views</h1>
+
+<p>CRAN task views aim to provide guidance which packages on CRAN
+are relevant for tasks related to a certain topic. They give a brief overview of the included packages
+which can also be automatically installed using the <a href="https://CRAN.R-project.org/package=ctv">ctv</a>
+package. The views are intended to have a sharp focus so that it is sufficiently
+clear which packages should be included (or excluded) - and they are <em>not</em> meant
+to endorse the "best" packages for a given task.</p>
+
+<p>To automatically install the views, the <a href="https://CRAN.R-project.org/package=ctv">ctv</a> package needs to be installed, e.g., via<br>
+<code>install.packages("ctv")</code><br>
+and then the views can be installed via <code>install.views</code> or <code>update.views</code>
+(where the latter only installs those packages are not installed and up-to-date), e.g.,<br>
+<code>ctv::install.views("Econometrics")</code><br>
+<code>ctv::update.views("Econometrics")</code><br>
+To query information about a particular task view on CRAN from within R or to obtain the list of all task views available, respectively,
+the following commands are provided:<br>
+<code>ctv::ctv("Econometrics")</code><br>
+<code>ctv::available.views()</code></p>
+
+<p>The resources available from the <a href="https://github.com/cran-task-views/ctv"><span class="GitHub">CRAN Task View Initiative</span></a>
+provide further information on how to contribute to existing task views and how to propose new task views.</p>
+
+<h3>Topics</h3>
+
+<table>
+  <tr style="vertical-align: top;">
+    <td><a href="ActuarialScience.html">ActuarialScience</a></td>
+    <td>Actuarial Science</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Agriculture.html">Agriculture</a></td>
+    <td>Agricultural Science</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="AnomalyDetection.html">AnomalyDetection</a></td>
+    <td>Anomaly Detection</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Bayesian.html">Bayesian</a></td>
+    <td>Bayesian Inference</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="CausalInference.html">CausalInference</a></td>
+    <td>Causal Inference</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="ChemPhys.html">ChemPhys</a></td>
+    <td>Chemometrics and Computational Physics</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="ClinicalTrials.html">ClinicalTrials</a></td>
+    <td>Clinical Trial Design, Monitoring, Analysis and Reporting</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Cluster.html">Cluster</a></td>
+    <td>Cluster Analysis &amp; Finite Mixture Models</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="CompositionalData.html">CompositionalData</a></td>
+    <td>Compositional Data Analysis</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Databases.html">Databases</a></td>
+    <td>Databases with R</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="DifferentialEquations.html">DifferentialEquations</a></td>
+    <td>Differential Equations</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Distributions.html">Distributions</a></td>
+    <td>Probability Distributions</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="DynamicVisualizations.html">DynamicVisualizations</a></td>
+    <td>Dynamic Visualizations and Interactive Graphics</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Econometrics.html">Econometrics</a></td>
+    <td>Econometrics</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Environmetrics.html">Environmetrics</a></td>
+    <td>Analysis of Ecological and Environmental Data</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Epidemiology.html">Epidemiology</a></td>
+    <td>Epidemiology</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="ExperimentalDesign.html">ExperimentalDesign</a></td>
+    <td>Design of Experiments (DoE) &amp; Analysis of Experimental Data</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="ExtremeValue.html">ExtremeValue</a></td>
+    <td>Extreme Value Analysis</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Finance.html">Finance</a></td>
+    <td>Empirical Finance</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="FunctionalData.html">FunctionalData</a></td>
+    <td>Functional Data Analysis</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="GraphicalModels.html">GraphicalModels</a></td>
+    <td>Graphical Models</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="HighPerformanceComputing.html">HighPerformanceComputing</a></td>
+    <td>High-Performance and Parallel Computing with R</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Hydrology.html">Hydrology</a></td>
+    <td>Hydrological Data and Modeling</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="MachineLearning.html">MachineLearning</a></td>
+    <td>Machine Learning &amp; Statistical Learning</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="MedicalImaging.html">MedicalImaging</a></td>
+    <td>Medical Image Analysis</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="MetaAnalysis.html">MetaAnalysis</a></td>
+    <td>Meta-Analysis</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="MissingData.html">MissingData</a></td>
+    <td>Missing Data</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="MixedModels.html">MixedModels</a></td>
+    <td>Mixed, Multilevel, and Hierarchical Models in R</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="ModelDeployment.html">ModelDeployment</a></td>
+    <td>Model Deployment with R</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="NaturalLanguageProcessing.html">NaturalLanguageProcessing</a></td>
+    <td>Natural Language Processing</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="NetworkAnalysis.html">NetworkAnalysis</a></td>
+    <td>Network Analysis</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="NumericalMathematics.html">NumericalMathematics</a></td>
+    <td>Numerical Mathematics</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="OfficialStatistics.html">OfficialStatistics</a></td>
+    <td>Official Statistics &amp; Survey Statistics</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Omics.html">Omics</a></td>
+    <td>Genomics, Proteomics, Metabolomics, Transcriptomics, and Other Omics</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Optimization.html">Optimization</a></td>
+    <td>Optimization and Mathematical Programming</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Paleontology.html">Paleontology</a></td>
+    <td>Paleontology</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Pharmacokinetics.html">Pharmacokinetics</a></td>
+    <td>Analysis of Pharmacokinetic Data</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Phylogenetics.html">Phylogenetics</a></td>
+    <td>Phylogenetics</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Psychometrics.html">Psychometrics</a></td>
+    <td>Psychometric Models and Methods</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="ReproducibleResearch.html">ReproducibleResearch</a></td>
+    <td>Reproducible Research</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Robust.html">Robust</a></td>
+    <td>Robust Statistical Methods</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Spatial.html">Spatial</a></td>
+    <td>Analysis of Spatial Data</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="SpatioTemporal.html">SpatioTemporal</a></td>
+    <td>Handling and Analyzing Spatio-Temporal Data</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="SportsAnalytics.html">SportsAnalytics</a></td>
+    <td>Sports Analytics</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Survival.html">Survival</a></td>
+    <td>Survival Analysis</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="TeachingStatistics.html">TeachingStatistics</a></td>
+    <td>Teaching Statistics</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="TimeSeries.html">TimeSeries</a></td>
+    <td>Time Series Analysis</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="Tracking.html">Tracking</a></td>
+    <td>Processing and Analysis of Tracking Data</td>
+  </tr>
+  <tr style="vertical-align: top;">
+    <td><a href="WebTechnologies.html">WebTechnologies</a></td>
+    <td>Web Technologies and Services</td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html lang=en> 
+<head>
+<title>CRAN: Sources</title>
+<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head>
+
+<body>
+
+<h1>R Sources</h1>
+
+<h2>Official releases</h2>
+
+Official releases of R source code are most likely what you want if
+you are looking for the sources of R (both Unix and Windows).
+<ul>
+  <li> The latest release (2026-04-24, Because it was There):
+  <a href="src/base/R-4/R-4.6.0.tar.gz">R-4.6.0.tar.gz</a><br>
+  Changes to the previous version are documented in the file <a
+  href="doc/manuals/r-release/NEWS.html">NEWS</a> (also contained in the sources).
+  
+  <li>Older releases are available <a href="src/base/">here</a>.
+</ul>
+
+<h2>Snapshots</h2>
+
+Snapshots of R sources for development and patched release
+versions can be obtained as gz-ed and xz-ed tar files from 
+<a href="https://CRAN.R-project.org/src/base-prerelease">https://CRAN.R-project.org/src/prerelease</a>.
+This comprises:
+<ul>
+  <li>The latest patched release:
+    <a href="https://CRAN.R-project.org/src/base-prerelease/R-patched.tar.gz">R-patched.tar.gz</a>, 
+    <a href="https://CRAN.R-project.org/src/base-prerelease/R-patched.tar.xz">R-patched.tar.xz</a> 
+    (read
+    <a href="https://CRAN.R-project.org/doc/manuals/r-patched/NEWS.html">what's new</a>
+    in the latest patched version). 
+    During the period up to a release, this will contain "alpha",
+    "beta", and "rc" versions. 
+  </li>
+  <li>The latest unreleased development version:
+    <a href="https://CRAN.R-project.org/src/base-prerelease/R-devel.tar.gz">R-devel.tar.gz</a>, 
+    <a href="https://CRAN.R-project.org/src/base-prerelease/R-devel.tar.xz">R-devel.tar.xz</a> 
+    (read
+    <a href="https://CRAN.R-project.org/doc/manuals/r-devel/NEWS.html">what's new</a>
+    in the latest devel version).
+  </li>
+  <li> 
+    Earlier versions of the above files going approximately a week back.
+  </li> 	
+</ul>
+<p>
+An alternative source of snapshots is 
+<a href="https://stat.ethz.ch/R/daily/">https://stat.ethz.ch/R/daily/</a>.
+</p>
+
+<p>
+After downloading the R sources you should also download the recommended
+packages by entering the R source tree and running
+<pre>
+    tools/rsync-recommended
+</pre>
+from a shell command line.
+
+<p>
+<!-- Note that there is currently no anonymous cvs access to the R -->
+<!-- sources. -->
+The above archives are created automatically from the Subversion tree,
+hence might not even compile on your platform and can contain any number
+of bugs. They will probably work, but maybe not. Use them to verify
+whether a bug you're tracking has been fixed or a new feature you always
+wanted has already been implemented.
+</p>
+<p>
+CRAN itself does no longer mirror source snapshots (as of 2001-11-14),
+because it makes only limited sense to propagate archives that change
+on a daily basis through a network of mirror sites. When a snapshot
+reaches one of the final nodes in the mirroring process, there are
+already 2 newer versions available at the orginal sites.
+</p>
+<p>
+Notice that it makes only limited sense to propagate archives that
+change on a daily basis through a network of mirror sites.  When a
+snapshot reaches one of the final nodes in the mirroring process, there
+are newer versions available at the orginal sites.  I.e., you should 
+probably pick up snapshots only from the CRAN master site, 
+<a href="https://cran.r-project.org/src/base-prerelease/">https://cran.r-project.org/src/base-prerelease/</a>.
+</p>
+
+</body> </html>

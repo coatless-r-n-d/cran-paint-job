@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CSS CRAN Garden</title>
+  <meta name="description" content="A CSS Zen Garden tribute for cran.r-project.org: same HTML, restyled entirely through cran-modern.css.">
+  <meta name="color-scheme" content="light dark">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #fff; --fg: #1a1c20; --border: #e3e6ea; --accent: #1f6feb;
+      --bg-soft: #f7f7f9; --fg-muted: #71717a;
+      /* Editor syntax-highlight palette (theme-aware via overrides below) */
+      --tok-comment: #71717a;
+      --tok-string:  #b45309;
+      --tok-atrule:  #1f6feb;
+      --tok-punct:   #71717a;
+      --tok-number:  #7c3aed;
+      --tok-variable:#0891b2;
+      --tok-function:#2563eb;
+      --tok-property:#1f6feb;
+      --tok-selector:#be185d;
+      --tok-keyword: #15803d;
+      --tok-hex:     #7c3aed;
+      font: 16px/1.5 ui-sans-serif, system-ui, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0e1116; --fg: #e6edf3; --border: #30363d; --accent: #58a6ff;
+        --bg-soft: #161b22; --fg-muted: #9aa4ad;
+        --tok-string:   #fb923c;
+        --tok-atrule:   #58a6ff;
+        --tok-number:   #c4b5fd;
+        --tok-variable: #67e8f9;
+        --tok-function: #93c5fd;
+        --tok-property: #58a6ff;
+        --tok-selector: #f9a8d4;
+        --tok-keyword:  #86efac;
+        --tok-hex:      #c4b5fd;
+      }
+    }
+    /* JS theme override, set by viewer.js when the Theme button leaves auto */
+    html[data-theme="dark"] {
+      --bg: #0e1116; --fg: #e6edf3; --border: #30363d; --accent: #58a6ff;
+      --bg-soft: #161b22; --fg-muted: #9aa4ad;
+      --tok-string:   #fb923c;
+      --tok-atrule:   #58a6ff;
+      --tok-number:   #c4b5fd;
+      --tok-variable: #67e8f9;
+      --tok-function: #93c5fd;
+      --tok-property: #58a6ff;
+      --tok-selector: #f9a8d4;
+      --tok-keyword:  #86efac;
+      --tok-hex:      #c4b5fd;
+    }
+    html[data-theme="light"] {
+      --bg: #ffffff; --fg: #1a1c20; --border: #e3e6ea; --accent: #1f6feb;
+      --bg-soft: #f7f7f9; --fg-muted: #71717a;
+      --tok-string:   #b45309;
+      --tok-atrule:   #1f6feb;
+      --tok-number:   #7c3aed;
+      --tok-variable: #0891b2;
+      --tok-function: #2563eb;
+      --tok-property: #1f6feb;
+      --tok-selector: #be185d;
+      --tok-keyword:  #15803d;
+      --tok-hex:      #7c3aed;
+    }
+    body { margin: 0; background: var(--bg); color: var(--fg); }
+    header {
+      position: sticky; top: 0; z-index: 10;
+      padding: .75rem 1rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+    }
+    header h1 { font-size: 1.05rem; margin: 0; }
+    header label { display: flex; gap: .35rem; align-items: center; font-size: .9rem; }
+    header select, header button {
+      font: inherit; padding: .35rem .6rem;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: var(--bg-soft); color: var(--fg); cursor: pointer;
+    }
+    header button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+    /* Icon-only chip sizing for the recenter (↔) glyph button. */
+    header button#recenter-btn {
+      padding: .25rem .55rem;
+      font-size: 1.05rem;
+      line-height: 1;
+    }
+    header .spacer { flex: 1; }
+    main {
+      display: grid;
+      grid-template-columns: var(--split, 1fr) 8px 1fr;
+      background: var(--bg);
+      height: calc(100vh - 56px);
+      transition: height .2s ease;
+    }
+    body.single-view main { grid-template-columns: 1fr; }
+    body.single-view #pane-left,
+    body.single-view #splitter { display: none; }
+    body.editor-open main { height: calc(60vh - 56px); }
+    .pane { display: flex; flex-direction: column; background: var(--bg); min-width: 0; }
+
+    /* Draggable splitter. While dragging, body.splitter-dragging disables
+       iframe pointer-events so drag isn't captured by iframe content. */
+    .splitter {
+      background: var(--border);
+      cursor: col-resize;
+      position: relative;
+      touch-action: none;
+      transition: background .12s ease;
+    }
+    .splitter::before {
+      content: "";
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px; height: 36px;
+      background: var(--fg-muted);
+      border-radius: 2px;
+      opacity: .55;
+      transition: opacity .12s ease, background-color .12s ease;
+    }
+    .splitter:hover,
+    .splitter:focus-visible {
+      background: var(--accent);
+      outline: 0;
+    }
+    .splitter:hover::before,
+    .splitter:focus-visible::before {
+      background: var(--accent-fg, #fff);
+      opacity: 1;
+    }
+    body.splitter-dragging {
+      cursor: col-resize;
+      user-select: none;
+    }
+    body.splitter-dragging .pane iframe { pointer-events: none; }
+    body.splitter-dragging .splitter { background: var(--accent); }
+    body.splitter-dragging .splitter::before {
+      background: var(--accent-fg, #fff);
+      opacity: 1;
+    }
+    .pane h2 {
+      margin: 0; padding: .35rem .75rem;
+      background: var(--bg-soft); border-bottom: 1px solid var(--border);
+      font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-muted);
+    }
+    .pane iframe { flex: 1; border: 0; width: 100%; background: var(--bg); }
+
+    /* Mobile preview: clamp iframe to 390px with a device-like frame so the
+       constrained surface reads as deliberate (not a layout bug). */
+    body.mobile-view .pane {
+      background: var(--bg-soft);
+      align-items: center;
+      padding: .85rem .75rem 1.25rem;
+    }
+    body.mobile-view .pane h2 {
+      background: transparent;
+      border-bottom: 0;
+      align-self: stretch;
+      text-align: center;
+    }
+    body.mobile-view .pane iframe {
+      width: 390px;
+      max-width: calc(100% - 1rem);
+      flex: 1 1 auto;
+      align-self: center;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--bg);
+      box-shadow:
+        0 0 0 4px var(--bg),
+        0 0 0 5px var(--border),
+        0 18px 40px -12px rgba(0,0,0,.18);
+    }
+    @media (max-width: 800px) {
+      main { grid-template-columns: 1fr; grid-auto-rows: 1fr; height: auto; }
+      .splitter { display: none; }
+      .pane iframe { min-height: 60vh; }
+      body.mobile-view .pane iframe { min-height: 70vh; }
+    }
+
+    /* CSS editor panel */
+    .editor {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 40vh;
+      background: var(--bg);
+      border-top: 2px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 20;
+      box-shadow: 0 -8px 24px rgba(0,0,0,.08);
+    }
+    .editor[hidden] { display: none; }
+    .editor-head {
+      padding: .5rem 1rem;
+      background: var(--bg-soft);
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: .75rem; align-items: center;
+      flex: 0 0 auto;
+    }
+    .editor-head h2 { margin: 0; font-size: .85rem; font-weight: 600; letter-spacing: -.005em; }
+    .editor-head .meta { font-size: .75rem; color: var(--fg-muted); font-family: ui-monospace, Menlo, monospace; }
+    .editor-head .spacer { flex: 1; }
+    .editor-body {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .editor-gutter {
+      flex: 0 0 auto;
+      min-width: 2.8rem;
+      padding: .75rem .65rem .75rem .85rem;
+      background: var(--bg-soft);
+      border-right: 1px solid var(--border);
+      color: var(--fg-muted);
+      font-family: ui-monospace, "Geist Mono", Menlo, monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      text-align: right;
+      white-space: pre;
+      user-select: none;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    /* Transparent textarea overlays a highlighted block. The two MUST share
+       identical font/padding/whitespace rules so glyphs align pixel-for-pixel
+       with the caret. Do not diverge any typography property below. */
+    .editor-pane {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .editor-highlighted,
+    .editor-pane textarea {
+      position: absolute;
+      inset: 0;
+      margin: 0;
+      border: 0;
+      padding: .75rem 1rem;
+      font-family: ui-monospace, "Geist Mono", "JetBrains Mono", "SF Mono", Menlo, monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 400;
+      letter-spacing: 0;
+      tab-size: 2;
+      white-space: pre;
+      word-wrap: normal;
+      overflow-wrap: normal;
+      word-break: normal;
+      overflow: auto;
+    }
+    .editor-highlighted {
+      pointer-events: none;
+      background: var(--bg);
+      color: var(--fg);
+      z-index: 1;
+    }
+    .editor-pane textarea {
+      background: transparent;
+      color: transparent;
+      caret-color: var(--accent);
+      resize: none;
+      outline: 0;
+      z-index: 2;
+    }
+    .editor-pane textarea:focus {
+      outline: 0;
+      box-shadow: inset 0 0 0 2px color-mix(in oklch, var(--accent) 25%, transparent);
+    }
+    .editor-pane textarea::selection {
+      background: color-mix(in oklch, var(--accent) 32%, transparent);
+      color: transparent;
+    }
+    /* Token classes pull from --tok-* so highlighting tracks the active theme. */
+    .cm-comment   { color: var(--tok-comment); font-style: italic; }
+    .cm-string    { color: var(--tok-string); }
+    .cm-atrule    { color: var(--tok-atrule); font-weight: 600; }
+    .cm-punct     { color: var(--tok-punct); }
+    .cm-number    { color: var(--tok-number); }
+    .cm-variable  { color: var(--tok-variable); }
+    .cm-function  { color: var(--tok-function); }
+    .cm-property  { color: var(--tok-property); }
+    .cm-selector  { color: var(--tok-selector); }
+    .cm-keyword   { color: var(--tok-keyword); }
+    .cm-hex       { color: var(--tok-hex); }
+
+    /* About modal */
+    dialog.modal {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0;
+      max-width: 52rem;
+      width: calc(100% - 2rem);
+      background: var(--bg);
+      color: var(--fg);
+      box-shadow: 0 12px 48px rgba(0,0,0,.18);
+    }
+    dialog.modal::backdrop {
+      background: rgba(0,0,0,.4);
+      backdrop-filter: blur(6px);
+    }
+    .modal-body { padding: 1.5rem 1.75rem 1.75rem; }
+    .modal-body h2 {
+      margin: 0 0 .85rem;
+      font-size: 1.15rem;
+      letter-spacing: -.01em;
+    }
+    .modal-body h3 {
+      margin: 1.4rem 0 .35rem;
+      font-size: .92rem;
+      font-weight: 600;
+    }
+    .modal-body p { margin: 0 0 .8rem; line-height: 1.55; }
+    .modal-body ol,
+    .modal-body ul { margin: 0 0 .8rem; padding-left: 1.25rem; line-height: 1.6; }
+    .modal-body ol li,
+    .modal-body ul li { margin-bottom: .25rem; }
+    .modal-body kbd {
+      display: inline-block;
+      padding: .05em .4em;
+      border: 1px solid var(--border);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      background: var(--bg-soft);
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: .8em;
+      line-height: 1;
+      color: var(--fg);
+    }
+    .modal-body code {
+      background: var(--bg-soft); padding: .05em .4em;
+      border-radius: 4px;
+      font-family: ui-monospace, Menlo, monospace; font-size: .85em;
+    }
+    .modal-body pre {
+      background: var(--bg-soft); padding: .65rem .9rem;
+      border-radius: 6px; overflow-x: auto;
+      font-family: ui-monospace, Menlo, monospace; font-size: .85em;
+      margin: .4rem 0 .8rem;
+    }
+    .modal-body a { color: var(--accent); }
+    .modal-foot {
+      display: flex; justify-content: flex-end; gap: .5rem;
+      padding: .85rem 1.75rem;
+      border-top: 1px solid var(--border);
+      background: var(--bg-soft);
+      border-radius: 0 0 10px 10px;
+    }
+    .modal-close-x {
+      position: absolute; top: .35rem; right: .55rem;
+      background: transparent; border: 0;
+      font-size: 1.5rem; line-height: 1;
+      cursor: pointer; color: var(--fg-muted);
+      padding: .25rem .5rem;
+    }
+    .modal-close-x:hover { color: var(--fg); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>CSS CRAN Garden</h1>
+
+  <label>
+    Page:
+    <select id="fixture">
+      <option value="home.html">CRAN homepage (full frameset)</option>
+      <option value="banner.html">CRAN homepage (main content only)</option>
+      <option value="package-dplyr.html">Package: dplyr</option>
+      <option value="packages-by-name.html">Packages by name</option>
+      <option value="packages-index.html">Packages index</option>
+      <option value="view-MachineLearning.html">Task view: MachineLearning</option>
+      <option value="views-index.html">Task views index</option>
+      <option value="mirrors.html">Mirrors</option>
+      <option value="manuals.html">Manuals</option>
+      <option value="faqs.html">FAQs</option>
+      <option value="sources.html">R Sources</option>
+      <option value="other-software.html">Other software</option>
+      <option value="CRAN_team.html">CRAN team</option>
+    </select>
+  </label>
+
+  <button id="toggle-compare" type="button" aria-pressed="true" title="Side-by-side comparison vs. paint-job only">Compare</button>
+  <button id="recenter-btn" type="button" title="Recenter divider (or double-click it)" hidden aria-label="Recenter divider">↔</button>
+  <button id="toggle-mobile" type="button" aria-pressed="false" title="Clamp iframes to a 390 px phone-size viewport">Mobile</button>
+  <button id="theme-toggle" type="button" aria-label="Theme: auto" title="Cycle theme: auto / light / dark">Theme: auto</button>
+  <button id="toggle-editor" type="button" aria-pressed="false" title="Edit cran-modern.css live">Edit CSS</button>
+  <span class="spacer"></span>
+  <button id="about-btn" type="button" title="About CSS CRAN Garden">About</button>
+</header>
+
+<main>
+  <section class="pane" id="pane-left">
+    <h2>Original (no stylesheet)</h2>
+    <iframe id="iframe-left" src="fixtures/home.html" title="Original CRAN page"></iframe>
+  </section>
+
+  <div class="splitter" id="splitter"
+       role="separator"
+       aria-orientation="vertical"
+       aria-label="Drag to resize panes"
+       tabindex="0"></div>
+
+  <section class="pane" id="pane-right">
+    <h2>With cran-modern.css</h2>
+    <iframe id="iframe-right" src="fixtures/home.html" title="Styled CRAN page"></iframe>
+  </section>
+</main>
+
+<aside class="editor" id="editor" hidden aria-label="Live CSS editor">
+  <div class="editor-head">
+    <h2>CSS CRAN Garden <span class="meta" id="editor-status">· live edit</span></h2>
+    <span class="spacer"></span>
+    <button id="editor-reset" type="button" title="Restore the on-disk cran-modern.css">Reset</button>
+    <button id="editor-close" type="button" title="Close editor; reload the on-disk cran-modern.css">Close</button>
+  </div>
+  <div class="editor-body">
+    <pre class="editor-gutter" id="editor-gutter" aria-hidden="true">1
+</pre>
+    <div class="editor-pane">
+      <pre class="editor-highlighted" id="editor-highlighted" aria-hidden="true"></pre>
+      <textarea id="editor-textarea" spellcheck="false" autocorrect="off" autocomplete="off" autocapitalize="off" wrap="off"></textarea>
+    </div>
+  </div>
+</aside>
+
+<dialog class="modal" id="about-modal" aria-labelledby="about-title">
+  <button class="modal-close-x" type="button" aria-label="Close" data-close>×</button>
+  <div class="modal-body">
+    <h2 id="about-title">About CSS CRAN Garden</h2>
+
+    <p>
+      This site is a tribute to the original
+      <a href="https://csszengarden.com" target="_blank" rel="noopener">CSS Zen Garden</a>,
+      created in 2003 by Dave Shea. The Zen Garden showed that the same
+      HTML could be transformed into radically different visual designs
+      using only CSS, by inviting designers around the world to contribute
+      their own stylesheets to a single fixed page. It became one of the
+      most influential demonstrations of what CSS could do on its own,
+      with no markup changes.
+    </p>
+
+    <p>
+      <strong>CSS CRAN Garden</strong> applies the same idea to
+      <a href="https://cran.r-project.org" target="_blank" rel="noopener">cran.r-project.org</a>.
+      The CRAN HTML stays exactly as the R generators serve it today. All
+      of the styling lives in a single drop-in stylesheet,
+      <code>cran-modern.css</code>, which keys off the structure and
+      attributes the existing pages already emit.
+    </p>
+
+    <p>Snapshots available via the <strong>Page</strong> selector:</p>
+    <ul>
+      <li>CRAN homepage (full <code>frameset</code>: logo, navbar, banner)</li>
+      <li>CRAN homepage (main banner only)</li>
+      <li>Package detail (using <em>dplyr</em> as the example)</li>
+      <li>Packages by name (alphabetical directory)</li>
+      <li>Packages index</li>
+      <li>Task view (using <em>MachineLearning</em> as the example)</li>
+      <li>Task views index</li>
+      <li>Mirrors</li>
+      <li>Manuals</li>
+      <li>FAQs</li>
+      <li>R Sources</li>
+      <li>Other software</li>
+      <li>CRAN team</li>
+    </ul>
+
+    <h3>Controls</h3>
+    <ul>
+      <li><strong>Compare:</strong> toggle between side-by-side and the paint-job only.</li>
+      <li><strong>Mobile:</strong> clamp both iframes to a 390 px phone-size viewport, centered with a device-like frame, to preview the layout on a phone.</li>
+      <li><strong>Theme:</strong> cycle <em>auto</em>, <em>light</em>, <em>dark</em>. The viewer chrome and both iframes follow.</li>
+      <li><strong>Edit CSS:</strong> open a live editor for <code>cran-modern.css</code> with CSS syntax highlighting and line numbers. Edits are injected into the right iframe within a few hundred milliseconds. <kbd>Tab</kbd> inserts two spaces. <kbd>⌘S</kbd> or <kbd>Ctrl</kbd>+<kbd>S</kbd> flushes the debounce immediately. <kbd>Reset</kbd> reloads the on-disk stylesheet.</li>
+    </ul>
+
+    <h3>How to adopt on a CRAN mirror</h3>
+    <ol>
+      <li>Copy <code>cran-modern.css</code> to your mirror's web root.</li>
+      <li>Add one line to the existing <code>&lt;head&gt;</code> in the page templates:
+        <pre>&lt;link rel="stylesheet" href="/cran-modern.css"&gt;</pre>
+      </li>
+      <li>That is all. No HTML changes are required, because the
+          stylesheet targets the structure and attributes the existing R
+          generators already emit.</li>
+    </ol>
+
+    <h3>Source</h3>
+    <p>
+      <a href="cran-modern.css" target="_blank">cran-modern.css</a>,
+      <a href="README.md" target="_blank">README.md</a>,
+      <a href="https://github.com/coatless/cran-reimagined" target="_blank" rel="noopener">GitHub repository</a>.
+    </p>
+  </div>
+  <div class="modal-foot">
+    <button type="button" data-close>Close</button>
+  </div>
+</dialog>
+
+<script src="viewer.js"></script>
+</body>
+</html>

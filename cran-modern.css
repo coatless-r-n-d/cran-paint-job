@@ -1,0 +1,2176 @@
+/* cran-modern.css: drop-in modernization for cran.r-project.org.
+   Targets CRAN's auto-generated HTML via attribute selectors and
+   :has(); the HTML is never modified. Geist + Geist Mono, single
+   R-blue accent, zinc neutrals, no decorative motion. */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+
+/* ---- 1. Tokens ---- */
+:root {
+  color-scheme: light dark;
+
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system,
+               "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "JetBrains Mono",
+               "SF Mono", Menlo, Consolas, monospace;
+
+  --bg:            #ffffff;
+  --bg-soft:       #fafafa;          /* zinc-50  */
+  --bg-card:       #ffffff;
+  --fg:            #09090b;          /* zinc-950 */
+  --fg-soft:       #52525b;          /* zinc-600 */
+  --fg-muted:      #a1a1aa;          /* zinc-400 */
+  --border:        #e4e4e7;          /* zinc-200 */
+  --border-strong: #d4d4d8;          /* zinc-300 */
+
+  --accent:        #1f6feb;          /* R blue */
+  --accent-soft:   #eff6ff;
+  --accent-fg:     #ffffff;
+  --visited:       #6f42c1;
+  --ok:            #15803d;
+  --code-bg:       #f4f4f5;          /* zinc-100 */
+
+  --radius:        6px;
+  --maxw:          72rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:            #09090b;
+    --bg-soft:       #18181b;
+    --bg-card:       #18181b;
+    --fg:            #fafafa;
+    --fg-soft:       #a1a1aa;
+    --fg-muted:      #71717a;
+    --border:        #27272a;
+    --border-strong: #3f3f46;
+    --accent:        #6ea8fe;
+    --accent-soft:   #1e3a8a;
+    --accent-fg:     #09090b;
+    --visited:       #c4b5fd;
+    --code-bg:       #18181b;
+  }
+}
+
+/* Manual theme override (viewer.js writes data-theme on <html>) */
+html[data-theme="dark"] {
+  --bg:            #09090b;
+  --bg-soft:       #18181b;
+  --bg-card:       #18181b;
+  --fg:            #fafafa;
+  --fg-soft:       #a1a1aa;
+  --fg-muted:      #71717a;
+  --border:        #27272a;
+  --border-strong: #3f3f46;
+  --accent:        #6ea8fe;
+  --accent-soft:   #1e3a8a;
+  --accent-fg:     #09090b;
+  --visited:       #c4b5fd;
+  --code-bg:       #18181b;
+}
+html[data-theme="light"] {
+  --bg:            #ffffff;
+  --bg-soft:       #fafafa;
+  --bg-card:       #ffffff;
+  --fg:            #09090b;
+  --fg-soft:       #52525b;
+  --fg-muted:      #a1a1aa;
+  --border:        #e4e4e7;
+  --border-strong: #d4d4d8;
+  --accent:        #1f6feb;
+  --accent-soft:   #eff6ff;
+  --accent-fg:     #ffffff;
+  --visited:       #6f42c1;
+  --code-bg:       #f4f4f5;
+}
+
+/* ---- 2. Reset + base ---- */
+html { box-sizing: border-box; -webkit-text-size-adjust: 100%; }
+*, *::before, *::after { box-sizing: inherit; }
+
+html, body { background: var(--bg); }
+body {
+  margin: 0;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  line-height: 1.6;
+  font-feature-settings: "ss03", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg { max-width: 100%; height: auto; }
+
+code, kbd, pre, samp, tt { font-family: var(--font-mono); }
+code {
+  background: var(--code-bg);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+table { font-variant-numeric: tabular-nums; }
+
+/* ---- 3. Typography ---- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  color: var(--fg);
+  margin: 1.5em 0 0.5em;
+}
+h1 {
+  font-weight: 600;
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 2.875rem);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+h2 {
+  font-weight: 600;
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+h3 {
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: -0.005em;
+}
+h4 {
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-soft);
+  margin: 2em 0 0.75em;
+}
+
+p, ul, ol, dl { margin: 0 0 1rem; }
+
+/* ---- 4. Links ---- */
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent) 30%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color 0.12s ease;
+}
+a:hover { text-decoration-color: var(--accent); }
+a:visited { color: var(--visited); }
+
+/* ---- 5. Layout primitive ----
+   Constrain BODY itself (not `body > *`) so bare text nodes share
+   the same content edge as block elements; otherwise orphan text
+   between <h2> and <ul> bleeds to the body edge. */
+body {
+  max-width: calc(var(--maxw) + 2 * clamp(1rem, 4vw, 2rem));
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+/* ---- 6. Frame seams (best-effort) ---- */
+html, frameset, frame { background: var(--bg); border: 0; }
+
+/* ---- 7. Skip link / focus / selection ---- */
+.skip { position: absolute; left: -9999px; }
+.skip:focus {
+  left: 1rem; top: 1rem;
+  background: var(--accent); color: var(--accent-fg);
+  padding: 0.5rem 0.8rem; border-radius: 6px;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+::selection { background: var(--accent); color: var(--accent-fg); }
+
+/* ---- 8. Navbar ---- */
+body:has(em.navigation) {
+  background: var(--bg);
+  padding: 1.5rem 1.25rem;
+  font-family: var(--font-sans);
+}
+body:has(em.navigation) > * {
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+body:has(em.navigation) p { margin: 0; padding: 0; }
+body:has(em.navigation) br { display: none; }
+
+em.navigation {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--fg-muted);
+  margin: 1.5rem 0 0.5rem;
+}
+em.navigation::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+em.navigation:first-of-type { margin-top: 0.25rem; }
+
+body:has(em.navigation) a {
+  position: relative;
+  display: block;
+  padding: 0.35rem 0.55rem;
+  margin: 0 -0.55rem;
+  border-radius: 5px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--fg);
+  text-decoration: none;
+  transition: background-color 0.12s ease, color 0.12s ease,
+              padding-left 0.15s ease;
+}
+body:has(em.navigation) a::before {
+  content: "→";
+  position: absolute;
+  left: 0.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.12s ease, transform 0.15s ease;
+}
+body:has(em.navigation) a:hover {
+  background: var(--bg-soft);
+  color: var(--accent);
+  padding-left: 1.4rem;
+}
+body:has(em.navigation) a:hover::before {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0.15rem);
+}
+
+/* ---- 9. Logo frame ---- */
+body:has(> a > img[src*="Rlogo" i]) {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  background: var(--bg);
+}
+body:has(> a > img[src*="Rlogo" i]) > a {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  line-height: 0;
+}
+body > a > img[src*="Rlogo" i] {
+  display: block;
+  width: auto;
+  height: clamp(56px, 70vh, 96px);
+}
+
+/* ---- 10. Banner page (homepage main content) ---- */
+
+/* Scoped via the layout-table signature so it doesn't fire on the
+   mirrors page and add a stray "CRAN" kicker / 24ch indent. */
+body:has(> h1:first-child + div > table) > h1:first-child {
+  position: relative;
+  font-weight: 700;
+  font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.75rem);
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  margin: 2.5rem auto 1.5rem;
+  padding-top: 3.5rem;
+  max-width: 24ch;
+  text-align: left;
+}
+body:has(> h1:first-child + div > table) > h1:first-child::before {
+  content: "CRAN";
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+body:has(> h1:first-child + div > table) > h1:first-child::after {
+  content: "";
+  position: absolute;
+  top: 2.4rem;
+  left: 0;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* Layout table → stacked action sections with numbered mono eyebrows. */
+body > div:not(.container) > table {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  margin: 0;
+  counter-reset: hero-grid;
+}
+body > div:not(.container) > table tr {
+  display: block;
+  padding: 3rem 0;
+  border-top: 1px solid var(--border);
+  counter-increment: hero-grid;
+}
+body > div:not(.container) > table tr:first-child {
+  border-top: 0;
+  padding-top: 3rem;
+}
+body > div:not(.container) > table tr:last-child {
+  padding-bottom: 1rem;
+}
+body > div:not(.container) > table td {
+  display: block;
+  padding: 0;
+  border: 0;
+  line-height: 1.7;
+}
+
+body > div:not(.container) > table h3 {
+  position: relative;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 1.15rem + 0.4vw, 1.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0 0 1.25rem;
+  padding-top: 1.65rem;
+}
+body > div:not(.container) > table h3::before {
+  content: counter(hero-grid, decimal-leading-zero);
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+
+body > div:not(.container) > table ul {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 0.25rem;
+  display: grid;
+  gap: 0.55rem;
+}
+body > div:not(.container) > table ul li {
+  padding: 0.35rem 0;
+}
+
+/* "Questions" + "Supporting CRAN" rows are prose, not link directories. */
+body > div:not(.container) > table tr:has(a[href$="faqs.html"]) ul li,
+body > div:not(.container) > table tr:has(a[href*="donations"]) ul li {
+  font-size: 1rem;
+  line-height: 1.7;
+  padding: 0.25rem 0;
+}
+body > div:not(.container) > table tr:has(a[href*="donations"]) ul li p {
+  margin: 0 0 0.85rem;
+}
+
+/* Source Code section: first LI as the primary download card. */
+body > div:not(.container) > table tr:has(a[href*="src/base"]) ul {
+  display: grid;
+  gap: 0.25rem;
+}
+body > div:not(.container) > table tr:has(a[href*="src/base"]) ul li {
+  padding: 0.35rem 0;
+  position: relative;
+  padding-left: 1.1rem;
+}
+body > div:not(.container) > table tr:has(a[href*="src/base"]) ul li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  top: 0.3rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+body > div:not(.container) > table tr:has(a[href*="src/base"]) ul li:first-child {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.02rem;
+}
+body > div:not(.container) > table tr:has(a[href*="src/base"]) ul li:first-child::before {
+  content: none;
+}
+/* Tarball link styling here is handled by the sources-page button
+   rule below (banner also matches base-prerelease); don't duplicate
+   color/background or the filename goes invisible on the button. */
+
+/* Download CTAs (anchors to /bin/) */
+body > div:not(.container) > table a[href^="bin/"]:not([href*="/contrib"]) {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  background: var(--accent);
+  color: var(--accent-fg);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.92rem;
+  text-decoration: none;
+  margin-right: 0.4rem;
+  transition: filter 0.12s ease;
+}
+body > div:not(.container) > table a[href^="bin/"]:not([href*="/contrib"]):hover {
+  filter: brightness(1.08);
+  text-decoration: none;
+}
+/* Linux distro sub-links: secondary chips */
+body > div:not(.container) > table a[href^="bin/linux/"]:not([href="bin/linux/"]) {
+  background: transparent;
+  color: var(--fg-soft);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  padding: 0.2rem 0.55rem;
+  font-weight: 400;
+  margin-right: 0.25rem;
+}
+body > div:not(.container) > table a[href^="bin/linux/"]:not([href="bin/linux/"]):hover {
+  background: var(--bg-soft);
+  color: var(--fg);
+  filter: none;
+}
+
+/* Banner-page typography sweep. Body font-size is shrunk slightly so
+   the bare-text "This server is hosted by..." credit reads small;
+   every styled element re-bumps back to its proper size. */
+body:has(> h1:first-child + div > table) {
+  font-size: 0.92rem;
+}
+
+body:has(> h1:first-child + div > table) > h2 {
+  position: relative;
+  font-weight: 600;
+  font-size: clamp(1.55rem, 1.25rem + 1.1vw, 2rem);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin: 5rem 0 1.5rem;
+  padding-top: 3.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg);
+}
+body:has(> h1:first-child + div > table) > h2::before {
+  position: absolute;
+  top: 1.6rem;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+body:has(> h1:first-child + div > table) > h2:nth-of-type(1)::before {
+  content: "ABOUT";
+}
+body:has(> h1:first-child + div > table) > h2:nth-of-type(2)::before {
+  content: "PUBLISH";
+}
+
+body:has(> h1:first-child + div > table) > p {
+  color: var(--fg);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 56rem;
+  margin: 0 0 1rem;
+}
+body:has(> h1:first-child + div > table) > h2 + p {
+  font-size: 1.15rem;
+}
+
+/* Re-bump from the body font-shrink so the action grid stays at normal size. */
+body:has(> h1:first-child + div > table) > div {
+  font-size: 1rem;
+}
+
+/* Generic article-page H2 fallback. Scoped pages override below. */
+body > h2 {
+  font-weight: 600;
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.75rem);
+  letter-spacing: -0.02em;
+  margin: 4rem auto 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+body > h2 + p {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--fg);
+}
+
+body:has(> h1:first-child + div > table) > hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 5rem 0 1.5rem;
+}
+body:has(> h1:first-child + div > table) > hr ~ p {
+  font-size: 0.92rem;
+  color: var(--fg-soft);
+  line-height: 1.55;
+  max-width: 56rem;
+  margin: 0 0 0.4rem;
+}
+body:has(> h1:first-child + div > table) > hr ~ p a {
+  color: var(--fg-soft);
+  text-decoration-color: color-mix(in oklch, var(--fg-soft) 40%, transparent);
+}
+body:has(> h1:first-child + div > table) > hr ~ p a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* Generic HR + footer fallback for non-banner article pages. */
+body > hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 4rem auto 1.5rem;
+}
+body > hr ~ p {
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+}
+body > hr ~ p a { color: var(--fg-soft); }
+body > hr ~ p a:hover { color: var(--accent); }
+
+/* WU Vienna hosting credit: small muted footer links. */
+body:has(> h1:first-child + div > table) > a[href*="wu.ac.at"] {
+  font-size: 0.92rem;
+  color: var(--fg-soft);
+  text-decoration-color: color-mix(in oklch, var(--fg-soft) 40%, transparent);
+}
+body:has(> h1:first-child + div > table) > a[href*="wu.ac.at"]:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* ---- 11. Package detail page ---- */
+
+body > div.container > h2:first-of-type {
+  font-weight: 600;
+  font-size: clamp(2.25rem, 1.6rem + 2vw, 3rem);
+  letter-spacing: -0.028em;
+  line-height: 1.05;
+  margin: 2rem 0 0.4rem;
+}
+body > div.container > h2:first-of-type + p {
+  font-size: 1.2rem;
+  line-height: 1.45;
+  color: var(--fg-soft);
+  max-width: 56rem;
+  margin: 0 0 2rem;
+}
+
+/* Metadata table → overview grid */
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 1.5rem 0 2.5rem;
+  padding: 0;
+  overflow: hidden;
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) > tbody {
+  display: contents;
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  min-width: 0;
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr td {
+  display: block;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr td:first-child {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr td:nth-child(2) {
+  font-size: 0.92rem;
+  line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Full-width chip-list rows (Imports / Suggests / Depends / LinkingTo / In views) */
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr:has(td > a:has(> span.CRAN)) {
+  grid-column: 1 / -1;
+  background: var(--bg-soft);
+  order: 1;
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr:has(td > a:has(> span.CRAN)) td:nth-child(2) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+
+/* Author row (full-width prose with inline ORCID icons) */
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr:has(td > a > img[alt^="ORCID" i]) {
+  grid-column: 1 / -1;
+  order: 2;
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr:has(td > a > img[alt^="ORCID" i]) img {
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -0.1em;
+  margin: 0 0.15em;
+}
+
+/* Multi-line rows (Citation / Materials) */
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr:has(td > br) {
+  grid-column: 1 / -1;
+  order: 3;
+}
+
+/* Strip right-border on every 3rd compact cell + last row bottom */
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr:nth-of-type(3n):not(:has(td > a:has(> span.CRAN))):not(:has(td > a > img[alt^="ORCID" i])):not(:has(td > br)) {
+  border-right: 0;
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr:last-child { border-bottom: 0; }
+
+/* Dependency chips */
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) a:has(> span.CRAN) {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) a:has(> span.CRAN):hover {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+}
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) a:has(> span.CRAN) > span.CRAN {
+  color: inherit;
+}
+
+/* Base R packages: muted text, no chip frame */
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) a:has(> span.base) {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--fg-muted);
+  background: transparent;
+  border: 0;
+  padding: 0.15rem 0.2rem;
+  text-decoration: none;
+}
+
+/* CRAN check pass: subtle pill */
+body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) td:has(> a[href*="checks/check_results_"]) a {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  background: color-mix(in oklch, var(--ok) 12%, transparent);
+  color: var(--ok);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* Subsequent tables (Documentation / Downloads / Reverse deps): clean rows */
+body > div.container > h2 ~ table:not(:first-of-type) {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  margin: 0.5rem 0 1.5rem;
+  display: table;
+}
+body > div.container > h2 ~ table:not(:first-of-type) > tbody { display: table-row-group; }
+body > div.container > h2 ~ table:not(:first-of-type) tr { display: table-row; }
+body > div.container > h2 ~ table:not(:first-of-type) td {
+  display: table-cell;
+  padding: 0.6rem 1rem 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: baseline;
+  font-size: 0.92rem;
+}
+body > div.container > h2 ~ table:not(:first-of-type) tr:last-child td { border-bottom: 0; }
+body > div.container > h2 ~ table:not(:first-of-type) td:first-child {
+  width: 11rem;
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+  padding-top: 0.75rem;
+  white-space: nowrap;
+}
+
+body > div.container > h4 {
+  margin: 2rem 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Mobile: stat grid → single column */
+@media (max-width: 640px) {
+  body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) { grid-template-columns: 1fr; }
+  body > div.container > h2 ~ table:first-of-type:not(:has(> thead)) tr { border-right: 0; }
+}
+
+/* ---- 12. Packages-by-name listing ---- */
+
+/* Scoped to the by-name page only (tr[id^="available-packages-"]
+   appears nowhere else); without the scope the manuals page would
+   also pick up the "DIRECTORY · A–Z" kicker. */
+body:has(tr[id^="available-packages-"]) > div.container > h1 {
+  position: relative;
+  font-weight: 600;
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 2.75rem);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 1.5rem 0 0.4rem;
+  padding-top: 2rem;
+}
+body:has(tr[id^="available-packages-"]) > div.container > h1::before {
+  content: "DIRECTORY · A–Z";
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+
+/* Counter for letter-section labels (26 rows → upper-alpha A..Z). */
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) {
+  border: 0;
+  font-size: 0.92rem;
+  counter-reset: alphasection;
+  width: 100%;
+}
+
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: baseline;
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) tr:not([id^="available-packages-"]):hover td {
+  background: var(--bg-soft);
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) td:first-child {
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  width: 13rem;
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) td:first-child a {
+  color: var(--accent);
+  text-decoration: none;
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) td:first-child a:hover {
+  text-decoration: underline;
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) td:nth-child(2) {
+  color: var(--fg-soft);
+  line-height: 1.4;
+}
+
+/* Letter section rows: large counter-rendered letter as chapter mark. */
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) tr[id^="available-packages-"] {
+  counter-increment: alphasection;
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) tr[id^="available-packages-"] td {
+  background: transparent;
+  border: 0;
+  border-top: 2px solid var(--border-strong);
+  padding: 1.5rem 0.75rem 0.6rem;
+  vertical-align: middle;
+  font-size: 0;
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) tr[id^="available-packages-"] td:first-child {
+  width: 13rem;
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) tr[id^="available-packages-"] td:first-child::before {
+  content: counter(alphasection, upper-alpha);
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--accent);
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) tr[id^="available-packages-"] td:nth-child(2)::before {
+  content: "Packages starting with " counter(alphasection, upper-alpha);
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--fg-muted);
+  vertical-align: middle;
+}
+/* First letter row: no top border (page title is the visual head). */
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) tr[id^="available-packages-A"] td {
+  border-top: 0;
+}
+
+/* A-Z jump bar */
+body > div.container > p:has(> a[href^="#available-packages-"]) {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding-block: 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0 auto;
+}
+body > div.container > p > a[href^="#available-packages-"] {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--fg-soft);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+body > div.container > p > a[href^="#available-packages-"]:hover {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+}
+body > div.container > p > a[href^="#available-packages-"] > span.CRAN {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+body > div.container > h1 ~ table:has(tr[id^="available-packages-"]) tr[id^="available-packages-"] { scroll-margin-top: 4rem; }
+
+/* ---- 13. Mirror page ---- */
+
+/* Scoped via :has(> dl), unique to this page. */
+body:has(> dl) > h1:first-child {
+  position: relative;
+  font-weight: 600;
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 2.75rem);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 1.5rem auto 0.4rem;
+  padding-top: 2rem;
+  max-width: none;
+  text-align: left;
+}
+body:has(> dl) > h1:first-child::before {
+  content: "MIRRORS · GLOBAL NETWORK";
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+
+/* Lead text aligns flush-left with the H1 and DL. Otherwise the
+   max-width column centers inside the wider body and reads as indented. */
+body:has(> dl) > h1:first-child + p {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  max-width: 56rem;
+}
+body:has(> dl) > h1:first-child + p + p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  max-width: 56rem;
+}
+
+body > dl {
+  margin: 1.5rem 0 2rem;
+  counter-reset: country;
+}
+body > dl > dt {
+  counter-increment: country;
+  position: relative;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.005em;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--border);
+  padding: 1.75rem 0 0.5rem 3.25rem;
+  margin-top: 0;
+  color: var(--fg);
+}
+body > dl > dt::before {
+  content: counter(country, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 1.85rem;
+  width: 2.5rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--fg-muted);
+}
+body > dl > dt:first-of-type { border-top: 0; }
+
+body > dl > dd {
+  margin: 0 0 0.5rem 3.25rem;
+  padding: 0;
+}
+body > dl > dd > table {
+  background: transparent;
+  border: 0;
+  margin: 0;
+  width: 100%;
+}
+body > dl > dd > table td {
+  border: 0;
+  padding: 0.3rem 1rem 0.3rem 0;
+  font-size: 0.92rem;
+  vertical-align: baseline;
+}
+
+body > dl > dd > table td:first-child {
+  width: 22rem;
+}
+body > dl > dd > table td:first-child a {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+body > dl > dd > table td:first-child a:hover {
+  text-decoration: underline;
+}
+
+/* HTTPS / HTTP indicator: same dot shape, colour carries the signal
+   (green = TLS, muted grey = plain HTTP) so HTTP entries don't read as broken. */
+body > dl > dd > table td:first-child a[href^="http://"]::before,
+body > dl > dd > table td:first-child a[href^="https://"]::before {
+  content: "●";
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 0.75em;
+  vertical-align: 0.1em;
+}
+body > dl > dd > table td:first-child a[href^="https://"]::before {
+  color: var(--ok);
+}
+body > dl > dd > table td:first-child a[href^="http://"]:not([href^="https://"])::before {
+  color: var(--fg-muted);
+}
+
+body > dl > dd > table td:nth-child(2) {
+  color: var(--fg-soft);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+/* ---- 14. Task view detail ---- */
+
+/* Sticky H2 context bar; package pages put their H2 inside .container
+   so the body > h2 selector is safe. */
+body > h2 {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in oklch, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  padding: 0.9rem clamp(1rem, 4vw, 2rem);
+  margin: 0 calc(-1 * clamp(1rem, 4vw, 2rem)) 1.5rem;
+  font-size: clamp(1.05rem, 0.85rem + 0.6vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  border-bottom: 1px solid var(--border);
+}
+
+body > h2 + table {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 1rem 0 2rem;
+  overflow: hidden;
+}
+body > h2 + table td {
+  padding: 0.7rem 1rem;
+  font-size: 0.92rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: baseline;
+}
+body > h2 + table tr:last-child td { border-bottom: 0; }
+body > h2 + table td:first-child {
+  width: 9.5rem;
+  background: transparent;
+  border-right: 1px solid var(--border);
+}
+body > h2 + table b {
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-soft);
+}
+
+/* "CRAN packages" section: rewire the comma-separated wall into chip
+   clouds. font-size: 0 on the cell collapses the comma/period text
+   nodes; anchors set their own font-size back to readable. */
+body > h3 + table:has(td > i) {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  margin: 1rem 0 2.5rem;
+}
+body > h3 + table:has(td > i) > tbody { display: block; }
+body > h3 + table:has(td > i) tr {
+  display: block;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+}
+body > h3 + table:has(td > i) tr:last-child { border-bottom: 0; }
+body > h3 + table:has(td > i) td {
+  display: block;
+  padding: 0;
+  border: 0;
+  width: auto;
+  background: transparent;
+}
+body > h3 + table:has(td > i) td:first-child {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+  margin-bottom: 0.75rem;
+}
+body > h3 + table:has(td > i) td:first-child i { font-style: normal; }
+
+body > h3 + table:has(td > i) td:nth-child(2) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  font-size: 0;            /* collapses comma/period text nodes */
+  line-height: 1;
+}
+body > h3 + table:has(td > i) td:nth-child(2) > a:has(> span.CRAN) {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.2rem 0.55rem;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+body > h3 + table:has(td > i) td:nth-child(2) > a:has(> span.CRAN):hover {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+}
+body > h3 + table:has(td > i) td:nth-child(2) > a:has(> span.CRAN) > span.CRAN {
+  color: inherit;
+}
+
+/* Core packages (first row): soft-filled to distinguish from Regular. */
+body > h3 + table:has(td > i) tr:first-child td:nth-child(2) > a:has(> span.CRAN) {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: color-mix(in oklch, var(--accent) 30%, transparent);
+  font-weight: 500;
+}
+body > h3 + table:has(td > i) tr:first-child td:nth-child(2) > a:has(> span.CRAN):hover {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+}
+
+/* "Related links" section: hairline list with external-link mark. */
+body > h3 + ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.75rem 0 2rem;
+}
+body > h3 + ul > li {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+}
+body > h3 + ul > li:last-child { border-bottom: 0; }
+body > h3 + ul > li > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--accent);
+}
+body > h3 + ul > li > a::after {
+  content: "↗";
+  font-size: 0.85em;
+  color: var(--fg-muted);
+  transition: transform 0.12s ease, color 0.12s ease;
+}
+body > h3 + ul > li > a:hover::after {
+  color: var(--accent);
+  transform: translate(0.1rem, -0.1rem);
+}
+
+body > h3 {
+  margin-top: 3rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-soft);
+}
+
+/* Topic list: numbered sections with inline em-as-topic-label. */
+body > ul:has(em) {
+  list-style: none;
+  padding-left: 0;
+  counter-reset: topic;
+  margin-top: 1.5rem;
+}
+body > ul:has(em) > li {
+  position: relative;
+  padding-left: 3.5rem;
+  counter-increment: topic;
+  margin-bottom: 2.25rem;
+  scroll-margin-top: 4.5rem;
+}
+body > ul:has(em) > li::before {
+  content: counter(topic, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  width: 2.5rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  letter-spacing: 0.05em;
+}
+body > ul:has(em) > li > p:first-of-type > em:first-child {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--accent);
+  padding-right: 0.15em;
+}
+
+/* ---- 15. In-prose CRAN package mentions ---- */
+body > ul a:has(> span.CRAN),
+body > p a:has(> span.CRAN) {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent) 30%, transparent);
+}
+body > ul a:has(> span.CRAN):hover,
+body > p a:has(> span.CRAN):hover {
+  text-decoration-color: var(--accent);
+}
+
+/* ---- 16. Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- 17. Generic article pages ---- */
+
+/* H1 fallback for pages not matched by the scoped banner/mirror rules
+   above. Specificity (0,0,2) so scoped :has() rules still win. */
+body > h1:first-child {
+  font-weight: 600;
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 2.75rem);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 2rem 0 1rem;
+  padding-top: 0;
+  max-width: none;
+}
+
+/* Same for .container-wrapped pages (manuals, packages-index). */
+body > div.container > h1:first-child {
+  font-weight: 600;
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 2.75rem);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 2rem 0 1rem;
+}
+
+body > h3,
+body > div.container > h3 {
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: -0.005em;
+  margin: 2.25rem 0 0.5rem;
+  color: var(--fg);
+}
+
+body > p,
+body > div.container > p {
+  color: var(--fg);
+  line-height: 1.65;
+}
+
+body > ul:not(:has(em)),
+body > div.container > ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0;
+}
+body > ul:not(:has(em)) > li,
+body > div.container > ul > li {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  line-height: 1.55;
+  border-bottom: 1px solid var(--border);
+}
+body > ul:not(:has(em)) > li:last-child,
+body > div.container > ul > li:last-child {
+  border-bottom: 0;
+}
+body > ul:not(:has(em)) > li::before,
+body > div.container > ul > li::before {
+  content: "›";
+  position: absolute;
+  left: 0.4rem;
+  top: 0.5rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* ---- 18. views-index ---- */
+
+/* Scoped away from the task-view CRAN-packages chip cloud (which uses
+   :has(td > i)); this matches the directory table specifically. */
+body > h3 + table:not(:has(td > i)) {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--border-strong);
+  margin: 1rem 0 2rem;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  counter-reset: tv;
+}
+body > h3 + table:not(:has(td > i)) > tbody { display: table-row-group; }
+body > h3 + table:not(:has(td > i)) tr {
+  counter-increment: tv;
+}
+body > h3 + table:not(:has(td > i)) td {
+  padding: 0.55rem 0.85rem 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: baseline;
+}
+body > h3 + table:not(:has(td > i)) tr:hover td {
+  background: var(--bg-soft);
+}
+body > h3 + table:not(:has(td > i)) td:first-child {
+  width: 18rem;
+  position: relative;
+  padding-left: 3rem;
+}
+body > h3 + table:not(:has(td > i)) td:first-child::before {
+  content: counter(tv, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 2.25rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+body > h3 + table:not(:has(td > i)) td:first-child a {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+body > h3 + table:not(:has(td > i)) td:first-child a:hover {
+  text-decoration: underline;
+}
+body > h3 + table:not(:has(td > i)) td:nth-child(2) {
+  color: var(--fg-soft);
+  line-height: 1.45;
+}
+
+/* ---- 19. Manuals page ---- */
+
+/* Distinguished from package-detail by the <thead>; the package-detail
+   grid is scoped with :not(:has(> thead)). */
+body > div.container > h2 ~ table:has(> thead) {
+  display: table;
+  table-layout: auto;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border-collapse: collapse;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+  font-size: 0.92rem;
+}
+body > div.container > h2 ~ table:has(> thead) thead {
+  background: var(--bg-soft);
+}
+body > div.container > h2 ~ table:has(> thead) th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--fg-muted);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-sans);
+}
+/* Strip strong-in-th bump (we already use tracked small caps). */
+body > div.container > h2 ~ table:has(> thead) th strong {
+  font-weight: inherit;
+}
+body > div.container > h2 ~ table:has(> thead) td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+body > div.container > h2 ~ table:has(> thead) tr:last-child td {
+  border-bottom: 0;
+}
+body > div.container > h2 ~ table:has(> thead) tr:hover td {
+  background: var(--bg-soft);
+}
+
+body > div.container > h2 ~ table:has(> thead) td:first-child {
+  max-width: 28rem;
+  line-height: 1.5;
+  color: var(--fg);
+}
+/* Manual title inline (not block) so it flows with punctuation and
+   doesn't leave an orphan colon on the next line. */
+body > div.container > h2 ~ table:has(> thead) td:first-child strong {
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: -0.005em;
+}
+body > div.container > h2 ~ table:has(> thead) td:first-child em {
+  font-style: italic;
+  color: var(--fg-soft);
+}
+
+/* Format columns: font-size: 0 collapses " | " text-node separators;
+   each anchor renders as a small mono chip. */
+body > div.container > h2 ~ table:has(> thead) td:not(:first-child) {
+  font-size: 0;
+  white-space: nowrap;
+  vertical-align: top;
+  padding-top: 1rem;
+}
+body > div.container > h2 ~ table:has(> thead) td:not(:first-child) a {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.2rem 0.5rem;
+  margin: 0 0.2rem 0.2rem 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+body > div.container > h2 ~ table:has(> thead) td:not(:first-child) a:hover {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+}
+
+/* Mobile: horizontal scroll for the 4-column table. */
+@media (max-width: 800px) {
+  body > div.container > h2 ~ table:has(> thead) {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  body > div.container > h2 ~ table:has(> thead) > thead,
+  body > div.container > h2 ~ table:has(> thead) > tbody {
+    display: table;
+    width: 100%;
+    min-width: 44rem;
+  }
+}
+
+body > div.container > h2 + em {
+  display: block;
+  font-style: italic;
+  color: var(--fg-soft);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ---- 20. Packages-index ---- */
+body > div.container > h3 {
+  margin-top: 2.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+body > div.container > hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+/* "Related Directories" <dl>: hairline-divided, inline DT/DD. */
+body > div.container > dl {
+  margin: 1rem 0 2rem;
+  display: grid;
+  gap: 0;
+}
+body > div.container > dl > dt {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.85rem 0 0.2rem;
+  border-top: 1px solid var(--border);
+}
+body > div.container > dl > dt:first-child { border-top: 0; }
+body > div.container > dl > dt a {
+  color: var(--accent);
+  text-decoration: none;
+}
+body > div.container > dl > dt a:hover { text-decoration: underline; }
+body > div.container > dl > dd {
+  margin: 0;
+  padding: 0 0 0.85rem 0;
+  color: var(--fg-soft);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+body > div.container > p > samp {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 0.05em 0.4em;
+  border-radius: 3px;
+  color: var(--fg);
+}
+
+/* ---- 21. Per-page kickers ---- */
+
+/* base-prerelease and CRAN-submissions anchors also appear on the
+   banner page, so those two selectors carry :not(banner-signature)
+   to keep each kicker on its intended page. Shared H1 + ::before
+   rules below; per-page content strings are set explicitly (one
+   attempt to consolidate via var(--page-kicker) failed in iframe). */
+
+/* Shared H1 hero treatment for every article kicker page. */
+body:has(> ul > li > a[href*="R-FAQ.html"]) > h1:first-child,
+body:has(a[href*="contrib/extra"]) > h1:first-child,
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > h1:first-child,
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h1:first-child,
+body:has(> h1):has(> h3 + table) > h1:first-child,
+body:has(> div.container > h2 + em) > div.container > h1:first-child,
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > h1:first-child {
+  position: relative;
+  font-weight: 600;
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 2.75rem);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 1.5rem 0 0.4rem;
+  padding-top: 2rem;
+  max-width: none;
+}
+
+/* Shared kicker eyebrow positioning; content set per-page below. */
+body:has(> ul > li > a[href*="R-FAQ.html"]) > h1:first-child::before,
+body:has(a[href*="contrib/extra"]) > h1:first-child::before,
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > h1:first-child::before,
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h1:first-child::before,
+body:has(> h1):has(> h3 + table) > h1:first-child::before,
+body:has(> div.container > h2 + em) > div.container > h1:first-child::before,
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > h1:first-child::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+
+/* Per-page kicker labels */
+body:has(> ul > li > a[href*="R-FAQ.html"]) > h1:first-child::before {
+  content: "DOCUMENTATION · FAQ";
+}
+body:has(a[href*="contrib/extra"]) > h1:first-child::before {
+  content: "DOWNLOADS · ADD-ONS";
+}
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > h1:first-child::before {
+  content: "DOWNLOADS · SOURCE";
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h1:first-child::before {
+  content: "ABOUT · CRAN TEAM";
+}
+body:has(> h1):has(> h3 + table) > h1:first-child::before {
+  content: "DIRECTORY · TASK VIEWS";
+}
+body:has(> div.container > h2 + em) > div.container > h1:first-child::before {
+  content: "DOCUMENTATION · MANUALS";
+}
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > h1:first-child::before {
+  content: "DIRECTORY · PACKAGES";
+}
+
+/* ---- FAQ page (DOCUMENTATION · FAQ) ---- */
+body:has(> ul > li > a[href*="R-FAQ.html"]) > ul {
+  display: grid;
+  gap: 0.75rem;
+  list-style: none;
+  padding-left: 0;
+  margin: 1.25rem 0 1.5rem;
+}
+body:has(> ul > li > a[href*="R-FAQ.html"]) > ul > li {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  padding-left: 1.25rem;
+  line-height: 1.55;
+}
+body:has(> ul > li > a[href*="R-FAQ.html"]) > ul > li::before {
+  content: none;
+}
+body:has(> ul > li > a[href*="R-FAQ.html"]) > ul > li a {
+  font-weight: 500;
+  text-decoration: none;
+}
+body:has(> ul > li > a[href*="R-FAQ.html"]) > ul > li a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Other software page (DOWNLOADS · ADD-ONS) ---- */
+
+body:has(a[href*="contrib/extra"]) {
+  counter-reset: addon-section;
+  line-height: 1.7;
+}
+
+/* H2 section heads: numbered eyebrow + top border + breathing room. */
+body:has(a[href*="contrib/extra"]) > h2 {
+  position: relative;
+  counter-increment: addon-section;
+  font-weight: 600;
+  font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.65rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 4.5rem 0 1.5rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg);
+}
+
+body:has(a[href*="contrib/extra"]) > h2::before {
+  content: counter(addon-section, decimal-leading-zero);
+  position: absolute;
+  top: 1.3rem;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+
+/* First H2 sits closer to the H1 hero. */
+body:has(a[href*="contrib/extra"]) > h2:first-of-type {
+  margin-top: 3rem;
+}
+
+/* Thin sections (H2 with no UL after) get a softer bottom margin. */
+body:has(a[href*="contrib/extra"]) > h2:not(:has(+ ul)) {
+  margin-bottom: 1rem;
+}
+
+body:has(a[href*="contrib/extra"]) > ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 1.25rem 0 2.5rem;
+  display: grid;
+  gap: 0.55rem;
+}
+body:has(a[href*="contrib/extra"]) > ul > li {
+  padding: 1.1rem 1.3rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  position: static;
+  line-height: 1.6;
+  color: var(--fg);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+body:has(a[href*="contrib/extra"]) > ul > li:hover {
+  border-color: color-mix(in oklch, var(--accent) 40%, var(--border));
+  background: var(--bg-soft);
+}
+body:has(a[href*="contrib/extra"]) > ul > li::before {
+  content: none;
+}
+
+/* Software name (first <a> in <li>): mono accent block label. */
+body:has(a[href*="contrib/extra"]) > ul > li > a:first-child {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  margin: 0 0.45rem 0.35rem 0;
+  padding: 0.05rem 0;
+  border-bottom: 1px solid color-mix(in oklch, var(--accent) 30%, transparent);
+}
+body:has(a[href*="contrib/extra"]) > ul > li > a:first-child:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* Inline links inside a description. */
+body:has(a[href*="contrib/extra"]) > ul > li a:not(:first-child) {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent) 30%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+body:has(a[href*="contrib/extra"]) > ul > li a:not(:first-child):hover {
+  text-decoration-color: var(--accent);
+}
+
+/* Body-level anchors inside bare-text intros: style as accent links. */
+body:has(a[href*="contrib/extra"]) > a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent) 30%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+body:has(a[href*="contrib/extra"]) > a:hover {
+  text-decoration-color: var(--accent);
+}
+
+/* ---- Sources page (DOWNLOADS · SOURCE) ---- */
+
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) {
+  counter-reset: src-section;
+}
+
+/* H2 section heads: numbered eyebrow + top hairline + breathing. */
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > h2 {
+  position: relative;
+  counter-increment: src-section;
+  font-weight: 600;
+  font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.65rem);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin: 4.5rem 0 1.25rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg);
+}
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > h2::before {
+  content: counter(src-section, decimal-leading-zero);
+  position: absolute;
+  top: 1.3rem;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > h2:first-of-type {
+  margin-top: 3rem;
+}
+
+/* Each release becomes a card. */
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.75rem 0 1.5rem;
+  display: grid;
+  gap: 0.75rem;
+}
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > ul > li {
+  padding: 1.1rem 1.35rem 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  position: static;
+  line-height: 1.55;
+  color: var(--fg);
+}
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > ul > li::before {
+  content: none;
+}
+
+/* First release card = latest stable: accent-tinted primary action. */
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > ul:first-of-type > li:first-child {
+  background: var(--accent-soft);
+  border-color: color-mix(in oklch, var(--accent) 30%, transparent);
+}
+
+/* Tarball download buttons (also applies on banner page; see note above). */
+body:has(a[href*="base-prerelease"]) a[href$=".tar.gz"],
+body:has(a[href*="base-prerelease"]) a[href$=".tar.xz"] {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.9rem;
+  background: var(--accent);
+  color: var(--accent-fg);
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-decoration: none;
+  margin: 0.25rem 0.35rem 0.25rem 0;
+  transition: filter 0.12s ease;
+}
+body:has(a[href*="base-prerelease"]) a[href$=".tar.gz"]:hover,
+body:has(a[href*="base-prerelease"]) a[href$=".tar.xz"]:hover {
+  filter: brightness(1.08);
+  text-decoration: none;
+}
+body:has(a[href*="base-prerelease"]) a[href$=".tar.gz"]:active,
+body:has(a[href*="base-prerelease"]) a[href$=".tar.xz"]:active {
+  filter: brightness(0.96);
+}
+
+body:has(a[href*="base-prerelease"]) a[href$=".tar.gz"]::before,
+body:has(a[href*="base-prerelease"]) a[href$=".tar.xz"]::before {
+  content: "↓ ";
+  font-size: 0.9em;
+  margin-right: 0.2rem;
+  opacity: 0.85;
+}
+
+/* Other prose links inside release cards (NEWS, "here", "Older releases"). */
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > ul > li a:not([href$=".tar.gz"]):not([href$=".tar.xz"]) {
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent) 30%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > ul > li a:not([href$=".tar.gz"]):not([href$=".tar.xz"]):hover {
+  text-decoration-color: var(--accent);
+}
+
+/* Trailing paragraphs are substantive content, not footer text. */
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) > p {
+  color: var(--fg);
+  font-size: 1rem;
+  line-height: 1.65;
+  max-width: 60rem;
+  margin: 1rem 0;
+}
+
+/* The rsync command block: quiet code wash (pre lives inside a <p>). */
+body:has(a[href*="base-prerelease"]):not(:has(> h1:first-child + div > table)) pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--fg);
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* ---- CRAN_team page (ABOUT · CRAN TEAM) ---- */
+
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) {
+  counter-reset: team-role;
+}
+
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h2 {
+  position: relative;
+  font-weight: 600;
+  font-size: clamp(1.5rem, 1.2rem + 1.1vw, 1.9rem);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 5rem 0 1.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg);
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h2::before {
+  position: absolute;
+  top: 1.3rem;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h2:nth-of-type(1)::before {
+  content: "PEOPLE";
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h2:nth-of-type(2)::before {
+  content: "ROLES";
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h2:first-of-type {
+  margin-top: 3rem;
+}
+
+/* "By Person" cards: current team accent-tinted, former team muted. */
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h2:first-of-type + p {
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in oklch, var(--accent) 30%, transparent);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin: 0 0 1rem;
+  max-width: 56rem;
+  line-height: 1.7;
+  color: var(--fg);
+  font-size: 1.02rem;
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h2:first-of-type + p + p {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem 1.5rem;
+  margin: 0 0 2rem;
+  max-width: 56rem;
+  line-height: 1.65;
+  color: var(--fg-soft);
+  font-size: 0.95rem;
+}
+/* Leading <br> in each team card acts as section break with breathing. */
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h2:first-of-type + p br,
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h2:first-of-type + p + p br {
+  line-height: 2.1;
+}
+
+/* H3 role heads: numbered "01-05" eyebrow + chapter heading. */
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h3 {
+  position: relative;
+  counter-increment: team-role;
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1rem + 0.55vw, 1.4rem);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 3.25rem 0 0.6rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg);
+  text-transform: none;
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h3::before {
+  content: counter(team-role, decimal-leading-zero);
+  position: absolute;
+  top: 1.1rem;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > h3:first-of-type {
+  margin-top: 2rem;
+}
+
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > ul {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.55rem;
+  margin: 1rem 0 1.25rem;
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > ul > li {
+  display: inline-flex;
+  align-items: baseline;
+  padding: 0.4rem 0.85rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--fg);
+  position: static;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > ul > li:hover {
+  border-color: color-mix(in oklch, var(--accent) 40%, var(--border));
+  background: var(--bg-soft);
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > ul > li::before {
+  content: none;
+}
+
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > ul > li > kbd {
+  font-family: var(--font-mono);
+  font-size: 0.78em;
+  background: color-mix(in oklch, var(--accent) 14%, transparent);
+  color: var(--accent);
+  padding: 0.05em 0.45em;
+  border-radius: 4px;
+  border: 0;
+  margin: 0 0.15em;
+}
+
+/* Inline mailto inside a member pill: quiet underline link, not a CTA. */
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > ul > li a[href^="mailto:"] {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--accent) 30%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > ul > li a[href^="mailto:"]:hover {
+  text-decoration-color: var(--accent);
+}
+
+/* Body-level mailto: primary contact CTA button. */
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > a[href^="mailto:"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid color-mix(in oklch, var(--accent) 35%, var(--border));
+  border-radius: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  margin: 0.5rem 0 1.5rem;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > a[href^="mailto:"]::before {
+  content: "✉";
+  font-size: 0.95em;
+  opacity: 0.7;
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > a[href^="mailto:"]:hover {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+}
+body:has(a[href*="CRAN-submissions"]):not(:has(> h1:first-child + div > table)) > a[href^="mailto:"]:hover::before {
+  opacity: 1;
+}
+
+/* ---- Views-index: install code as a real code block ---- */
+body:has(> h1):has(> h3 + table) > p > code {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  margin: 0.15rem 0;
+}
+
+/* ---- Manuals page: downsize H1 so H2 "The R Manuals" leads ---- */
+body:has(> div.container > h2 + em) > div.container > h1:first-child {
+  font-size: clamp(1.1rem, 0.95rem + 0.5vw, 1.3rem);
+  font-weight: 500;
+  color: var(--fg-soft);
+  margin-bottom: 0.2rem;
+  letter-spacing: 0;
+}
+body:has(> div.container > h2 + em) > div.container > h2 {
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.4rem;
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* ---- Packages-index page (DIRECTORY · PACKAGES) ---- */
+
+/* Promote H3 sections to chapter headers with numbered eyebrows. */
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container {
+  counter-reset: pkg-section;
+}
+
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > h3 {
+  position: relative;
+  counter-increment: pkg-section;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 1.1rem + 0.85vw, 1.6rem);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin: 4.5rem 0 1.25rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg);
+}
+
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > h3::before {
+  content: counter(pkg-section, decimal-leading-zero);
+  position: absolute;
+  top: 1.3rem;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+}
+
+/* First H3 sits closer to the H1 hero. */
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > h3:first-of-type {
+  margin-top: 3rem;
+}
+
+/* First paragraph after "Available Packages" carries the headline stat. */
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > p {
+  color: var(--fg);
+  font-size: 1.02rem;
+  line-height: 1.7;
+  max-width: 56rem;
+  margin: 0 0 0.85rem;
+}
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > h3:first-of-type + p {
+  font-size: 1.15rem;
+  color: var(--fg);
+  margin-bottom: 1.1rem;
+}
+
+/* Three nav-entrypoint links after the stat: accent-pill treatment. */
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > p > a:has(> span.CRAN) {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid color-mix(in oklch, var(--accent) 30%, transparent);
+  padding: 0.05rem 0;
+  transition: border-bottom-color 0.15s ease;
+}
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > p > a:has(> span.CRAN):hover {
+  border-bottom-color: var(--accent);
+}
+
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container kbd {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.05em 0.45em;
+  color: var(--fg);
+  font-weight: 500;
+}
+
+/* HR before "Related Directories": wider margin reads as real divider. */
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > hr {
+  margin: 4rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+/* H3 after the <hr>: drop border-top so it doesn't double the <hr> seam. */
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > hr + h3 {
+  border-top: 0;
+  padding-top: 1.75rem;
+  margin-top: 2.25rem;
+}
+body:has(> div.container > dl):not(:has(> div.container > h2)) > div.container > hr + h3::before {
+  top: 0.8rem;
+}

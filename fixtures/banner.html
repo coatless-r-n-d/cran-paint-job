@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html lang=en> 
+<head>
+<title>The Comprehensive R Archive Network</title>
+<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+th, td {
+  padding: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>The Comprehensive R Archive Network</h1>
+
+<div>
+<table style="margin-left: auto;margin-right: auto;width: 80%">
+  <tr>
+    <td><h3>Download and Install R</h3>
+      Precompiled binary distributions of the base system and
+      contributed packages, <strong>Windows and
+      Mac</strong> users most likely want one of these versions of R:
+	<ul>
+	  <li><a href="bin/linux/">Download R for Linux</a>
+	    (<a href="bin/linux/debian">Debian</a>,
+	    <a href="bin/linux/fedora">Fedora/Redhat</a>,
+	    <a href="bin/linux/ubuntu">Ubuntu</a>)
+	  </li>
+	  <li><a href="bin/macosx/">Download R for macOS</a></li>
+	  <li><a href="bin/windows/">Download R for Windows</a></li>
+	</ul>
+    R is part of many Linux distributions, you should check with your Linux package management system in addition to the link above.
+    </td>
+  </tr>
+  <tr>
+    <td><h3>Source Code for all Platforms</h3>
+      Windows and Mac users most likely want to download the
+      precompiled binaries listed in the upper box, not the source
+      code. The sources have to be compiled before you can use
+      them. If you do not know what this means, you probably do not
+      want to do it!
+      <ul style="display: grid; gap: 0.5rem;">
+	<li>The latest release (2026-04-24, Because it was There)
+	  <a href="src/base/R-4/R-4.6.0.tar.gz">R-4.6.0.tar.gz</a>, 
+	  read
+	  <a href="doc/manuals/r-release/NEWS.html">what's new</a> 
+	  in the latest version.
+	</li>
+	<li>The CRAN directory 
+	  <a href="https://CRAN.R-project.org/src/base-prerelease/">src/base-prerelease</a> 
+	  contains R alpha, beta, and rc releases as daily snapshots in
+	  time periods before a planned release.
+	</li> 
+	<li>Between releases, the same directory
+          <a href="https://CRAN.R-project.org/src/base-prerelease/">src/base-prerelease</a>
+	  contains snapshots of current patched and development versions.<br>  
+	  Please read about 
+	  <a href="https://CRAN.R-project.org/doc/manuals/r-devel/NEWS.html">new features and bug
+	    fixes</a>
+	  before filing corresponding feature requests or bug reports.
+	</li>
+	<li> Alternatively, daily snapshots are
+	  <a href="https://stat.ethz.ch/R/daily"
+	  target="_blank">available here</a>.
+	</li>
+	<li>Source code of older versions of R is 
+	  <a href="src/base/" >available here</a>.
+	</li>
+	<li>Contributed extension
+	  <a href="web/packages/index.html">packages</a>.
+	</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td><h3>Questions About R</h3>
+      <ul><li>
+      If you have questions about R like how to download and install
+      the software, or what the license terms are,
+      please read our <a href="faqs.html" >answers to frequently asked
+      questions</a> before you send an email.
+	</li></ul>
+    </td>
+  </tr>
+  <tr>
+    <td><h3>Supporting CRAN</h3>
+      <ul><li>
+      <p>
+      CRAN operations, most importantly hosting, checking, distributing,
+      and archiving of R add-on packages for various platforms, crucially rely
+      on technical, emotional, and financial support by the R community.
+      </p>
+      <p>
+      Please consider making <a href="https://www.r-project.org/foundation/donations.html#one-off-donation-form">
+      financial contributions</a> to the R Foundation for Statistical Computing.
+      </p>
+      </li></ul>
+    </td>
+  </tr>
+</table>
+</div>
+
+<h2>What are R and CRAN?</h2>
+
+<p> R is &lsquo;GNU S&rsquo;, a freely available language and environment for
+statistical computing and graphics which provides a wide variety of
+statistical and graphical techniques: linear and nonlinear modelling,
+statistical tests, time series analysis, classification, clustering,
+etc. Please consult the <a href="https://www.R-project.org/"
+target="_top">R project homepage</a> for further information.
+</p>
+
+<p> CRAN is a network of ftp and web servers around the world that
+store identical, up-to-date, versions of code and documentation for
+R. Please use the CRAN <a
+href="mirrors.html">mirror</a> nearest to you to minimize network
+load.
+</p>
+
+<h2 id="submitting">Submitting to CRAN </h2>
+
+<!-- 
+<p><font color="#FF0000">
+ CRAN submission will be closed Dec 23, 2025 to Jan 7, 2026
+ (CRAN team vacation and maintenance work).
+</font></p>
+
+<p><font color="#FF0000">Submissions are closed: This year's CRAN submission winter break 
+(CRAN team vacation and maintenance work) is from Dec 23, 2025 to Jan 7, 2026.</font></p> 
+
+<p><font color="#FF0000">Temporarily (May 08) submissions are not processed. Submission is still be possible.</font></p> 
+-->
+
+
+
+<p>
+To &ldquo;submit&rdquo; a package to CRAN,
+check that your submission meets the
+<a href="https://CRAN.R-project.org/web/packages/policies.html">
+CRAN Repository Policy</a> and then use the 
+<a href="https://xmpalantir.wu.ac.at/cransubmit/">web form</a>.
+<!--web form linked from this place once CRAN submission is open again.-->
+</p>
+
+<p>
+If this fails,
+send an email to
+<A HREF="mailto:CRAN-submissions@R-project.org">CRAN-submissions@R-project.org</A> following the policy.
+
+
+Please do not attach submissions to emails, because this will clutter up
+the mailboxes of half a dozen people.
+</p>
+
+<p>
+Note that we generally do not accept submissions of precompiled
+binaries due to security reasons. All binary distribution listed above
+are compiled by selected maintainers, who are in charge for all
+binaries of their platform, respectively.
+</p>
+
+<hr/>
+
+<p>
+For queries about this web site, please contact 
+<a href="mailto:cran-sysadmin@r-project.org">the webmaster</a>.
+</p>
+  This server is hosted by the <a href="https://www.wu.ac.at/statmath/" target=_top>Institute for Statistics and Mathematics</a> of <a href="https://www.wu.ac.at" target=_top>WU (Wirtschaftsuniversit&auml;t Wien)</a>.<br>
+</body> </html>
