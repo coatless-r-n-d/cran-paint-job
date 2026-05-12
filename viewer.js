@@ -1,4 +1,4 @@
-// viewer.js: vanilla JS for the paint-job side-by-side viewer.
+// viewer.js — vanilla JS for the paint-job side-by-side viewer.
 
 (function () {
   const fixtureSelect = document.getElementById('fixture');
@@ -19,6 +19,7 @@
   const editorStatus = document.getElementById('editor-status');
   const editorReset = document.getElementById('editor-reset');
   const editorClose = document.getElementById('editor-close');
+  const editorDownload = document.getElementById('editor-download');
 
   const aboutModal = document.getElementById('about-modal');
 
@@ -37,7 +38,7 @@
   let originalCSS = '';
   let cssDebounceTimer = null;
 
-  // Recurse into nested frames. The homepage fixture uses a frameset with
+  // Recurse into nested frames — the homepage fixture uses a frameset with
   // 3 nested frames, so overlay/theme/nav-disable must reach each sub-doc.
   function forEachFrameDoc(win, fn) {
     let doc;
@@ -441,6 +442,19 @@
     updateGutter();
     debouncedApplyEditedCSS();
   });
+  // Download the current editor content as cran-modern.css (whatever the
+  // user has been editing, including any unsaved changes).
+  editorDownload.addEventListener('click', () => {
+    const blob = new Blob([editorTextarea.value], { type: 'text/css' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cran-modern.css';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
   // Tab inserts 2 spaces (preserves caret); Cmd/Ctrl+S flushes the debounce.
   editorTextarea.addEventListener('keydown', (e) => {
     if (e.key === 'Tab' && !e.shiftKey) {
@@ -507,7 +521,7 @@
   const splitter = document.getElementById('splitter');
   const recenterBtn = document.getElementById('recenter-btn');
   const mainEl = document.querySelector('main');
-  const SPLIT_MIN = 140;        // px, minimum width either pane can shrink to
+  const SPLIT_MIN = 140;        // px — minimum width either pane can shrink to
   const SPLIT_HANDLE_W = 8;     // matches the grid track size in CSS
   let splitterDragging = false;
 
